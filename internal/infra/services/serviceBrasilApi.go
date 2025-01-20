@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-type ExternalServiceBrasilApi interface {
+type ExternalServiceBrasilApiInterface interface {
 	GetCep(ctx context.Context, cep string) (map[string]interface{}, error)
 }
 

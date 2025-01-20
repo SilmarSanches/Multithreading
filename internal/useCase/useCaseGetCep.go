@@ -7,12 +7,12 @@ import (
 )
 
 type UseCaseGetCep struct {
-	ViaCepService    services.HttpExternalServiceViaCep
-	BrasilApiService services.ExternalServiceBrasilApi
+	ViaCepService    services.ExternalServiceViaCepInterface
+	BrasilApiService services.ExternalServiceBrasilApiInterface
 	appConfig        *config.Config
 }
 
-func NewUseCaseGetCep(viaCepService services.HttpExternalServiceViaCep, brasilApiService services.ExternalServiceBrasilApi, appConfig *config.Config) *UseCaseGetCep {
+func NewUseCaseGetCep(viaCepService services.ExternalServiceViaCepInterface, brasilApiService services.ExternalServiceBrasilApiInterface, appConfig *config.Config) *UseCaseGetCep {
 	return &UseCaseGetCep{
 		ViaCepService:    viaCepService,
 		BrasilApiService: brasilApiService,
