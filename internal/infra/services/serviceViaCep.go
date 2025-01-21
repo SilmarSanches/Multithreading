@@ -15,7 +15,7 @@ import (
 )
 
 type ExternalServiceViaCepInterface interface {
-	GetCep(ctx context.Context, cep string) (map[string]interface{}, error)
+	GetCep(ctx context.Context, cep string) (entities.ViaCepDto, error)
 }
 
 type HttpExternalServiceViaCep struct {

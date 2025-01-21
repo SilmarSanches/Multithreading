@@ -14,7 +14,7 @@ import (
 )
 
 type ExternalServiceBrasilApiInterface interface {
-	GetCep(ctx context.Context, cep string) (map[string]interface{}, error)
+	GetCep(ctx context.Context, cep string) (entities.BrasilApiDto, error)
 }
 
 type HttpExternalServiceBrasilApi struct {
