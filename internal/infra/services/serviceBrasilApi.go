@@ -5,10 +5,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/silmarsanches/multithreading/config"
 	"io"
 	"net/http"
 	"time"
+
+	"github.com/silmarsanches/multithreading/config"
+	"github.com/silmarsanches/multithreading/internal/infra/entities"
 )
 
 type ExternalServiceBrasilApiInterface interface {
@@ -27,7 +29,7 @@ func NewHttpExternalServiceBrasilApi(appConfig *config.Config) *HttpExternalServ
 	}
 }
 
-func (e *HttpExternalServiceBrasilApi) GetCep(ctx context.Context, cep string) (map[string]interface{}, error) {
+func (e *HttpExternalServiceBrasilApi) GetCep(ctx context.Context, cep string) (entities.BrasilApiDto, error) {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
@@ -35,13 +37,13 @@ func (e *HttpExternalServiceBrasilApi) GetCep(ctx context.Context, cep string) (
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
-		return nil, err
+		return entities.BrasilApiDto{}, err
 	}
 
 	res, err := e.HttpClient.Do(req)
 	if err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {
-			return nil, fmt.Errorf("timeout de 3s excedido ao consultar o serviço brasilapi: %v", err)
+			return entities.BrasilApiDto{}, fmt.Errorf("timeout de 3s excedido ao consultar o serviço brasilapi: %v", err)
 		}
 	}
 
@@ -53,13 +55,13 @@ func (e *HttpExternalServiceBrasilApi) GetCep(ctx context.Context, cep string) (
 	}(res.Body)
 
 	if res.StatusCode != http.StatusOK {
-		return nil, errors.New("erro ao consultar o serviço brasilapi: " + res.Status)
+		return entities.BrasilApiDto{}, errors.New("erro ao consultar o serviço brasilapi: " + res.Status)
 	}
 
-	var data map[string]interface{}
+	var data entities.BrasilApiDto
 	err = json.NewDecoder(res.Body).Decode(&data)
 	if err != nil {
-		return nil, err
+		return entities.BrasilApiDto{}, err
 	}
 
 	return data, nil

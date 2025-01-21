@@ -5,7 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+
 	"github.com/silmarsanches/multithreading/config"
+	"github.com/silmarsanches/multithreading/internal/infra/entities"
+
 	"io"
 	"net/http"
 	"time"
@@ -27,7 +30,7 @@ func NewHttpExternalServiceViaCep(appConfig *config.Config) *HttpExternalService
 	}
 }
 
-func (e *HttpExternalServiceViaCep) GetCep(ctx context.Context, cep string) (map[string]interface{}, error) {
+func (e *HttpExternalServiceViaCep) GetCep(ctx context.Context, cep string) (entities.ViaCepDto, error) {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
@@ -35,13 +38,13 @@ func (e *HttpExternalServiceViaCep) GetCep(ctx context.Context, cep string) (map
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
-		return nil, err
+		return entities.ViaCepDto{}, err
 	}
 
 	res, err := e.HttpClient.Do(req)
 	if err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {
-			return nil, fmt.Errorf("Timeout de 3s excedido ao consultar o serviço ViaCep: %v", err)
+			return entities.ViaCepDto{}, fmt.Errorf("Timeout de 3s excedido ao consultar o serviço ViaCep: %v", err)
 		}
 	}
 
@@ -53,13 +56,13 @@ func (e *HttpExternalServiceViaCep) GetCep(ctx context.Context, cep string) (map
 	}(res.Body)
 
 	if res.StatusCode != http.StatusOK {
-		return nil, errors.New("erro ao consultar o serviço ViaCep: " + res.Status)
+		return entities.ViaCepDto{}, errors.New("erro ao consultar o serviço ViaCep: " + res.Status)
 	}
 
-	var data map[string]interface{}
+	var data entities.ViaCepDto
 	err = json.NewDecoder(res.Body).Decode(&data)
 	if err != nil {
-		return nil, err
+		return entities.ViaCepDto{}, err
 	}
 
 	return data, nil
