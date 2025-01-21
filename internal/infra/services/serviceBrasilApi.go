@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/silmarsanches/multithreading/config"
-	"github.com/silmarsanches/multithreading/internal/infra/entities"
+	"github.com/silmarsanches/multithreading/internal/entities"
 )
 
 type ExternalServiceBrasilApiInterface interface {

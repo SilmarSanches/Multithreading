@@ -5,13 +5,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-
-	"github.com/silmarsanches/multithreading/config"
-	"github.com/silmarsanches/multithreading/internal/infra/entities"
-
 	"io"
 	"net/http"
 	"time"
+
+	"github.com/silmarsanches/multithreading/config"
+	"github.com/silmarsanches/multithreading/internal/entities"
 )
 
 type ExternalServiceViaCepInterface interface {
