@@ -47,6 +47,10 @@ func (e *HttpExternalServiceBrasilApi) GetCep(ctx context.Context, cep string) (
 		}
 	}
 
+	if res == nil {
+		return entities.BrasilApiDto{}, errors.New("resposta nula ao consultar o brasilapi")
+	}
+
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {

@@ -43,14 +43,18 @@ func (e *HttpExternalServiceViaCep) GetCep(ctx context.Context, cep string) (ent
 	res, err := e.HttpClient.Do(req)
 	if err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {
-			return entities.ViaCepDto{}, fmt.Errorf("Timeout de 3s excedido ao consultar o serviço ViaCep: %v", err)
+			return entities.ViaCepDto{}, fmt.Errorf("timeout de 3s excedido ao consultar o serviço ViaCep: %v", err)
 		}
+	}
+
+	if res == nil {
+		return entities.ViaCepDto{}, errors.New("resposta nula ao consultar o viacep")
 	}
 
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
-			fmt.Printf("Erro ao fechar o corpo da resposta ViaCep: %v", err)
+			fmt.Printf("erro ao fechar o corpo da resposta ViaCep: %v", err)
 		}
 	}(res.Body)
 
