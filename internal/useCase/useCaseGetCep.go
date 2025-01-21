@@ -65,7 +65,7 @@ func (u *UseCaseGetCep) GetCep(ctx context.Context, cep string) (entities.Common
 			return mappers.MapViaCepToCommon(data), nil
 		case data := <-channelBrasilApi:
 			return mappers.MapBrasilApiToCommon(data), nil
-		case <-time.After(10 * time.Second):
+		case <-time.After(1 * time.Second):
 			return entities.CommonCepDto{}, errors.New("Timeout de 10s excedido ao consultar os serviços ViaCep e BrasilApi")
 		}
 	}
